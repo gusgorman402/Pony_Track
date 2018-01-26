@@ -74,7 +74,7 @@
               horses.horseData(x, function(err, res){
                 if(!err){
                   var n = res[1].toString(10);
-                  myTable.rows[n].cells[0].innerHTML = n.link("http://localhost/bet.html?track="
+                  myTable.rows[n].cells[0].innerHTML = n.link("https://rawgit.com/gusgorman402/Pony_Track/master/bet.html?track="
                       + raceTrack + "&raceNum=" + raceNum + "&horseNum=" + res[1] );
                   myTable.rows[n].cells[1].innerHTML = res[0].toString(10);
                   myTable.rows[n].cells[2].innerHTML = res[2].toString(10);
