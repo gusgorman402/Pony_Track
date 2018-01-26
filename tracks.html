@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./web3.js/dist/web3.js"></script>
+    <link rel="stylesheet" href="./tracks.css" />
+
+  </head>
+
+  <body>
+    <header>
+      <h1>Ethereum Horsetrack</h1>
+      <h2>Pick Your Track</h2>
+      <h2><pre id="NumberOfTracks"></pre></h2>
+    </header>
+    <p>Good Luck</p>
+
+    <script>
+
+        if (typeof web3 !== 'undefined') {
+          web3 = new Web3(web3.currentProvider);
+        } else {
+          web3 = new Web3(new Web3.providers.HttpProviders("http://localhost:8545"));
+        }
+
+
+        var tracksContract = web3.eth.contract( [{"constant":true,"inputs":[],"name":"namesOfTracks","outputs":[{"name":"","type":"string"},{"name":"","type":"string"},{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"numOfOpenTracks","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}] );
+
+        var tracks = tracksContract.at('0xae1E7eDdc12fb980f9084341DE6de1E39B3b93E5');
+
+
+        tracks.numOfOpenTracks( function(error,result) {
+          document.getElementById('NumberOfTracks').innerText = result;
+        });
+
+        var body = document.getElementsByTagName("body")[0];
+        var tbl = document.createElement("table");
+        tbl.setAttribute("class", "center");
+        tbl.setAttribute("align", "center");
+        var tblBody = document.createElement("tbody");
+
+        tracks.namesOfTracks( function(error, result) {
+          if(!error){
+            for( var i = 0; i < result.length; i++ ){
+              var row = document.createElement("tr");
+              var cell = document.createElement("td");
+              cell.setAttribute("align", "center");
+              var link = document.createElement("a");
+              link.setAttribute("href", "http://localhost/races.html?track=" + result[i]);
+              var linkText = document.createTextNode( result[i] );
+              link.appendChild(linkText);
+              cell.appendChild(link);
+              row.appendChild(cell);
+              tblBody.appendChild(row);
+            }
+
+            tbl.appendChild(tblBody);
+            body.appendChild(tbl);
+            tbl.setAttribute("border", "1");
+          }
+        });
+
+    </script>
+
+  </body>
+
+</html>
