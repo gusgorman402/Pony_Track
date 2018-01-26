@@ -1,0 +1,26 @@
+h1 {
+  text-align: center;
+}
+
+h2 {
+  text-align: center;
+}
+
+p {
+  text-align: center;
+}
+
+pre {
+  text-align: center;
+}
+
+table.center {
+  margin-left: 0 auto;
+  margin-right: 0 auto;
+  margin: 0 auto;
+}
+
+td {
+  text-align: center;
+  vertical-align: middle;
+}
