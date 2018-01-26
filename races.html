@@ -70,7 +70,7 @@ var dailyRacesContract = web3.eth.contract( [{"constant":true,"inputs":[{"name":
               dailyRaces.raceData(x, function(err, res){
                 if(!err){
                   var n = res[1].toString(10);
-                  myTable.rows[n].cells[0].innerHTML = res[0].link("http://localhost/horses.html?track=" 
+                  myTable.rows[n].cells[0].innerHTML = res[0].link("https://rawgit.com/gusgorman402/Pony_Track/master/horses.html?track=" 
                       + raceTrack + "&raceNum=" + res[1].toString(10) );
                   myTable.rows[n].cells[1].innerHTML = res[2].toString(10);
                   myTable.rows[n].cells[2].innerHTML = res[3].toString(10);
