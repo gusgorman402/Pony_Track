@@ -1,0 +1,91 @@
+<!DOCTYPE html>
+<html>
+  <head>
+    <title>My Page</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+    <script src="./node_modules/bignumber.js/bignumber.js"></script>
+    <script src="./web3.js/dist/web3.js"></script>
+    <link rel="stylesheet" href="./tracks.css" />
+
+  </head>
+
+  <body>
+    <header>
+      <h1>Ethereum Horsetrack</h1>
+      <h2><pre id="trackName">Your Track</pre></h2>
+      <h2><pre id="raceNumber">Your Race</pre></h2>
+        <h2>Pick Your Horse</h2>
+    </header>
+    <p>Good Luck</p>
+
+
+
+
+    <script>
+        if (typeof web3 !== 'undefined') {
+          web3 = new Web3(web3.currentProvider);
+        } else {
+          web3 = new Web3(new Web3.providers.HttpProviders("http://localhost:8545"));
+        }
+
+        var horsesContract = web3.eth.contract( [{"constant":true,"inputs":[{"name":"x","type":"uint256"}],"name":"horseData","outputs":[{"name":"","type":"string"},{"name":"","type":"uint256"},{"name":"","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[{"name":"","type":"uint256"}],"name":"horses","outputs":[{"name":"horseName","type":"string"},{"name":"horseNum","type":"uint256"},{"name":"horseMLodds","type":"string"}],"payable":false,"stateMutability":"view","type":"function"},{"constant":true,"inputs":[],"name":"numberOfHorses","outputs":[{"name":"","type":"uint256"}],"payable":false,"stateMutability":"view","type":"function"},{"inputs":[],"payable":false,"stateMutability":"nonpayable","type":"constructor"}] );
+
+        var horses = horsesContract.at('0x7089e47c33Ba132E5BE8560e52ddC1446BB8Bf87');
+
+        var parameters = location.search.substring(1).split("&");
+        var temp = parameters[0].split("=");
+        var raceTrack = unescape(temp[1]);
+        temp = parameters[1].split("=");
+        var raceNum = unescape(temp[1]);
+        document.getElementById('trackName').innerText = raceTrack;
+        document.getElementById('raceNumber').innerText = "Race " + raceNum;
+
+
+        var body = document.getElementsByTagName("body")[0];
+        var tbl = document.createElement("table");
+        tbl.setAttribute("id", "myTable");
+        tbl.setAttribute("class", "center");
+        tbl.setAttribute("align", "center");
+        var tblBody = document.createElement("tbody");
+
+        horses.numberOfHorses( function(error, result){
+          if(!error){
+            for( var x = 0; x <= result; x++ ){
+              var row = document.createElement("tr");
+              for(var y = 0; y < 3; y++){
+                var cell = document.createElement("td");
+                cell.setAttribute("align", "center");
+                var cellText = document.createTextNode( "section" );
+                cell.appendChild(cellText);
+                row.appendChild(cell);
+              }
+              tblBody.appendChild(row);
+            }
+            tbl.appendChild(tblBody);
+            body.appendChild(tbl);
+            tbl.setAttribute("border", "1");
+
+            var myTable = document.getElementById("myTable");
+            myTable.rows[0].cells[0].innerHTML = "Horse Number";
+            myTable.rows[0].cells[1].innerHTML = "Horse Name";
+            myTable.rows[0].cells[2].innerHTML = "ML Odds";
+
+            for( var x = 1; x <= result; x++){
+              horses.horseData(x, function(err, res){
+                if(!err){
+                  var n = res[1].toString(10);
+                  myTable.rows[n].cells[0].innerHTML = n.link("http://localhost/bet.html?track="
+                      + raceTrack + "&raceNum=" + raceNum + "&horseNum=" + res[1] );
+                  myTable.rows[n].cells[1].innerHTML = res[0].toString(10);
+                  myTable.rows[n].cells[2].innerHTML = res[2].toString(10);
+                }
+              });
+            }
+          }
+        });
+
+    </script>
+
+  </body>
+
+</html>
